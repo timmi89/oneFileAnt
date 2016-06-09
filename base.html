@@ -1,0 +1,209 @@
+{% extends "base/site-admin.html" %}
+{% load custom_filters %}
+
+{% block page_title %}Antenna Q &amp; A{%endblock%}
+
+{% block bodyClass %}admin{% endblock %}
+
+{% block sidebarContent %}
+    {% with group=form.instance %}
+    {% with "embed_qa" as activeAdminTab %}
+    {% with "desktop" as whichGroupList %}
+    {% include "admin_nav_tabs.html" %}
+    {% endwith %}
+    {% endwith %}
+    {% endwith %}
+{% endblock %}
+
+<!--
+{
+    "autoQuestionsInsertMethod": "after",
+    "autoQuestionsSelector": ".product_section",
+    "categories": [
+        {
+            "categoryValues": "Bia Boxing*",
+            "id": "4f758356-16ef-11e6-a388-02420a44021d",
+            "questions": [
+                {
+                    "answers": "Snug and secure; No float; Like butter; Room for improvement",
+                    "id": "3064f69a-189d-11e6-816d-02420a44060e",
+                    "sharedReactions": true,
+                    "text": "How's the feel?"
+                },
+                {
+                    "answers": "Supports every shot; Increased my accuracy; Hands are faster; Needs more adjustments",
+                    "id": "3064fa78-189d-11e6-816d-02420a44060e",
+                    "sharedReactions": true,
+                    "text": "How does it perform?"
+                }
+            ]
+        }
+    ],
+    "categoryAttribute": "",
+    "categorySelector": "h1.product_name",
+    "expandReactions": "both",
+    "questions": [
+        {
+            "answers": "Love the quality; Solid community; Powerful style; Fierce as f*ck",
+            "id": "3064ff96-189d-11e6-816d-02420a44060e",
+            "sharedReactions": true,
+            "text": "Best thing?"
+        }
+    ],
+    "title": "Fighter Feedback"
+}
+-->
+
+{% block page_content %}
+    <section class="content" data-groupId="{{ group.id }}">
+        <div class="admin-header">
+            <h1>Q &amp; A</h1>
+            <div class="fixed-button-container">
+            <div class="formFeedback" data-saved="{{saved}}">
+            <span style="display: none;" class="error">Oops, there were some errors with the form, please see the sections highlighted red above.</span>
+            <span style="display: none;" class="success" >Changes saved</span>
+            </div>
+            <button class="btn flat">Save Changes</button>
+            </div>
+        </div>
+
+        <div class="col s12 m6">
+          <div class="admin-content">
+
+            <label for="id">
+            <div class=""><span class="labelTitle">Questions Selector:</span></label></div><input id="autoQuestionsSelector" type="text" value="{{ question_config.autoQuestionsSelector }}">
+
+
+
+            <label for="id">
+            <div class=""><span class="labelTitle">Questions:</span></label></div>
+            {% for question in question_config.questions %}
+                <div class="question" data-id="{{ question.id }}">
+                    <div class="">Question Text:</div><input type="text" class="question-text" value="{{ question.text }}">
+
+                <div class="question" data-id="{{ question.id }}">
+                  <div class="">Answers:</div><input type="text" class="answer-text" value="{{ question.answers }}">
+
+                <div class="question" data-id="{{ question.id }}">
+                    <div class="">Answers:</div><input type="text" class="question-text" value="{{ question.answers }}">
+                <label>{% endfor %}</label>
+              </div>
+
+            <!-- <div>Answers:</div>
+              {% for answer in answer_config.answer %}
+              <div class="answer" data-id="{{answer.id}}">
+              <div class="">Answer Text:</div><input type="text" class="answer-text" value="{{ answer.text }}">
+            {% endfor %}
+          </div> -->
+
+              </div>
+
+
+              <div class="formRow">
+
+                        <label for="id_question_method">
+                            <span class="labelTitle">Question Method</span>
+                            <span>How should Antenna display the question? This maps to the jQuery function of the same name (e.g., ".before()");</span>
+                        </label>
+                        {{ form.summary_widget_method.as_hidden }}{{ form.summary_widget_method.errors }}
+                        <select id="question_method_selector" class="browser-default">
+                            <option {% if group.summary_widget_method == "append" %}selected="selected"{% endif %} value="append">:append</option>
+                            <option {% if group.summary_widget_method == "prepend" %}selected="selected"{% endif %} value="prepend">:prepend</option>
+                            <option {% if group.summary_widget_method == "before" %}selected="selected"{% endif %} value="before">:before</option>
+                            <option {% if group.summary_widget_method == "after" %}selected="selected"{% endif %} value="after">:after</option>
+                        </select>
+                    </div>
+
+
+                  <div class="rightColumn">
+                  <div class="formRow">
+                    <div class=""><span class="labelTitle">Category Selector:</span></div><input id="categorySelector" type="text" value="{{ category_config.categorySelector }}">
+
+                    <!-- <label for="id">
+                    <div>Catergories:</div>
+                    {% for catergory in catergory_config.catergories %}
+                        <div class="catergory" data-id="{{ catergories.id }}">
+                            <div class="">Catergory Text:</div><input type="text" class="catergory-text" value="{{ catergory.text }}">
+                        {% endfor %}</label>
+                      </div> -->
+
+                    <!-- <div>Add Categories:</div>
+                    {% for category in category_config.category %}
+                        <div class="category" data-id="{{ category.id }}">
+                            <div class="">Category Text:</div><input type="text" class="category-text" value="{{ category.text }}">
+                        {% endfor %} -->
+                      </div>
+                      <br>
+                      <br>
+                      <br>
+                    <div>Add Questions to the categories:</div>
+
+                    </div>
+
+
+                  </div>
+                </div>
+
+
+    </section>
+  </div>
+{% endblock page_content %}
+
+    {% block afterWideContent %}
+    {% endblock %}
+
+{% block page_js %}
+<script>
+      $(function() {
+          $('.content').on('click', 'button', submitChanges);
+          function loadQuestionConfig() {
+              var question_config = {};
+              question_config.autoQuestionsSelector = $('#autoQuestionsSelector').val();
+              question_config.questions = [];
+              var questionElements = $('.question');
+              for (var i = 0; i < questionElements.length; i++) {
+                  var questionElement = $(questionElements[i]);
+                  var question = {};
+                  question.id = questionElement.data('id');
+                  question.text = questionElement.find('.question-text').val();
+                  // question.text = questionElement.find('.answer-text').val();
+                  question_config.questions.push(question);
+              }
+              return question_config;
+          }
+          function submitChanges() {
+              var questions = loadQuestionConfig();
+              console.log('Pretending to submit: ');
+              console.log(JSON.stringify(questions, null, 4));
+//                $.ajax({
+//                    url: "/api/questionConfig/"+$('.content').data('groupId')+"/",
+//                    type: "put",
+//                    // contentType: "application/json",
+//                    // dataType: "jsonp",
+//                    data: { json: JSON.stringify(questions) },
+//                    success: function(response) {
+//                    },
+//                    error: function(response) {
+//                        console.log(response);
+//                    }
+//                });
+          }
+      });
+  </script>
+{% endblock %}
+<!-- //     $(function() {
+//         $('.content').on('click', 'button', submitChanges);
+//         function loadCategoryConfig() {
+//             var Category_config = {};
+//             question_config.autoQuestionsSelector = $('#autoCategorySelector').val();
+//             category_config.category = [];
+//             var CategoryElements = $('.Category');
+//             for (var i = 0; i < categoryElements.length; i++) {
+//                 var categoryElement = $(questionElements[i]);
+//                 var category = {};
+//                 category.id = categoryElement.data('id');
+//                 category.text = categoryElement.find('.category-text').val();
+//                 category_config.category.push(category);
+//             }
+//             return category_config;
+// } -->
