@@ -67,76 +67,98 @@
             </div>
         </div>
 
-        <div class="col s12 m6">
-          <div class="admin-content">
+        <div class="admin-content">
+        <div class="form-fields">
+        <div class="col s12 m5">
+
+            <section class="questionSelector">
+              <h3>Questions</h3>
+            <label for="id">
+            <div class="questionSelector"><span class="labelTitle">Questions Selector: (CSS Selector)</span><p>
+              Defines sections where the questions will be placed, whether it is before or after a certain element.
+            </p></label></div><input id="autoQuestionsSelector" type="text" value="{{ question_config.autoQuestionsSelector }}">
+
+            <div class="formRow">
+                      <label for="id_summary_widget_method">
+                          <span class="labelTitle">Question Insert Method</span>
+                          <span>How should Antenna display the question? This maps to the jQuery function of the same name (e.g., ".before()");</span>
+                      </label>
+                      {{ form.summary_widget_method.as_hidden }}{{ form.summary_widget_method.errors }}
+                      <select id="summary_widget_method_selector" class="browser-default">
+                          <option {% if group.summary_widget_method == "append" %}selected="selected"{% endif %} value="append">:append</option>
+                          <option {% if group.summary_widget_method == "prepend" %}selected="selected"{% endif %} value="prepend">:prepend</option>
+                          <option {% if group.summary_widget_method == "before" %}selected="selected"{% endif %} value="before">:before</option>
+                          <option {% if group.summary_widget_method == "after" %}selected="selected"{% endif %} value="after">:after</option>
+                      </select>
+            </div>
+
+            <div class="formRow">
+
 
             <label for="id">
-            <div class=""><span class="labelTitle">Questions Selector:</span></label></div><input id="autoQuestionsSelector" type="text" value="{{ question_config.autoQuestionsSelector }}">
-
-
-
-            <label for="id">
-            <div class=""><span class="labelTitle">Questions:</span></label></div>
+            <div class=""><span class="labelTitle">Questions:</span></div>
             {% for question in question_config.questions %}
                 <div class="question" data-id="{{ question.id }}">
+                  <p>
+                    What sort of questions do you want your audience to react too? Here you can write specific questions to target those reactions.
+                  </p></label>
                     <div class="">Question Text:</div><input type="text" class="question-text" value="{{ question.text }}">
-
+                    <button class="btn flat">Add Question</button>
+                </div>
+                </div>
+                <div class="formRow">
+                  <div class="question" data-id="{{ question.id }}">
+                      <div class="">Answers:</div><input type="text" class="question-text" value="{{ question.answers }}">
+                        <button class="btn flat">Add Answer</button>
+                </div>
+                </div>
+                <div class="formRow">
+                <label for="id">
                 <div class="question" data-id="{{ question.id }}">
-                  <div class="">Answers:</div><input type="text" class="answer-text" value="{{ question.answers }}">
-
-                <div class="question" data-id="{{ question.id }}">
-                    <div class="">Answers:</div><input type="text" class="question-text" value="{{ question.answers }}">
-                <label>{% endfor %}</label>
+                    <div class=""><span class="labelTitle">Shared Reactions:</span><p>
+                      Would you like your users to be able to create their own reactions?
+                    </p></div><input type="text" class="question-text" value="{{ question.sharedReactions }}"></label>
+                </div>
               </div>
+              <label>{% endfor %}</label>
+            </section>
+        </div>
 
-            <!-- <div>Answers:</div>
-              {% for answer in answer_config.answer %}
-              <div class="answer" data-id="{{answer.id}}">
-              <div class="">Answer Text:</div><input type="text" class="answer-text" value="{{ answer.text }}">
-            {% endfor %}
-          </div> -->
-
-              </div>
-
-
-              <div class="formRow">
-
-                        <label for="id_question_method">
-                            <span class="labelTitle">Question Method</span>
-                            <span>How should Antenna display the question? This maps to the jQuery function of the same name (e.g., ".before()");</span>
-                        </label>
-                        {{ form.summary_widget_method.as_hidden }}{{ form.summary_widget_method.errors }}
-                        <select id="question_method_selector" class="browser-default">
-                            <option {% if group.summary_widget_method == "append" %}selected="selected"{% endif %} value="append">:append</option>
-                            <option {% if group.summary_widget_method == "prepend" %}selected="selected"{% endif %} value="prepend">:prepend</option>
-                            <option {% if group.summary_widget_method == "before" %}selected="selected"{% endif %} value="before">:before</option>
-                            <option {% if group.summary_widget_method == "after" %}selected="selected"{% endif %} value="after">:after</option>
-                        </select>
-                    </div>
-
-
-                  <div class="rightColumn">
-                  <div class="formRow">
-                    <div class=""><span class="labelTitle">Category Selector:</span></div><input id="categorySelector" type="text" value="{{ category_config.categorySelector }}">
-
-                    <!-- <label for="id">
-                    <div>Catergories:</div>
-                    {% for catergory in catergory_config.catergories %}
-                        <div class="catergory" data-id="{{ catergories.id }}">
-                            <div class="">Catergory Text:</div><input type="text" class="catergory-text" value="{{ catergory.text }}">
-                        {% endfor %}</label>
-                      </div> -->
-
-                    <!-- <div>Add Categories:</div>
-                    {% for category in category_config.category %}
-                        <div class="category" data-id="{{ category.id }}">
-                            <div class="">Category Text:</div><input type="text" class="category-text" value="{{ category.text }}">
-                        {% endfor %} -->
+                  <div class="rightColumn col s12 m5 offset-m1">
+                    <section class="">
+                      <h3>Categories</h3>
+                        <label for="id">
+                        <div class=""><span class="labelTitle">Category Selector: (CSS Selector)</span></div><p>
+                          Defines a section where the categories would appear on the page.
+                        </p><input id="categorySelector" type="text" value="{{ question.categorySelector }}"></label>
+                      <!-- </div> -->
+                      <div class="formRow">
+                        <label for="id"><span class="labelTitle">Add a Category:</span>
+                        <input type="text" class="addCategory" name="name" value="{{ category.categorySelector }}">
+                        <button class="btn flat">Add a category</button></label>
                       </div>
-                      <br>
-                      <br>
-                      <br>
-                    <div>Add Questions to the categories:</div>
+                      <div class="formRow">
+                        <label for="categoryValue">
+                      <div class="category" data-id="{{ question.id }}">
+                          <div class=""><span class="labelTitle">Category value:</span></div><input type="text" class="question-text" value="{{ question.text }}">
+                      </div></label>
+
+                      </div>
+
+                      <div class="formRow">
+                        <label for="categoryQuestion">
+                      <div class="category" data-id="{{ question.id }}">
+                          <div class=""><span class="labelTitle">Question:</span></div><input type="text" class="question-text" value="{{ question.text }}">
+                          <p>
+                            Add a question to a specific category
+                          </p>
+                          <button class="btn flat">Add Question</button>
+                      </div></label>
+
+                      </div>
+
+                    </section>
+
 
                     </div>
 
@@ -146,7 +168,8 @@
 
 
     </section>
-  </div>
+
+
 {% endblock page_content %}
 
     {% block afterWideContent %}
@@ -171,6 +194,7 @@
               }
               return question_config;
           }
+
           function submitChanges() {
               var questions = loadQuestionConfig();
               console.log('Pretending to submit: ');
@@ -191,6 +215,7 @@
       });
   </script>
 {% endblock %}
+
 <!-- //     $(function() {
 //         $('.content').on('click', 'button', submitChanges);
 //         function loadCategoryConfig() {
