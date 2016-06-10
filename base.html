@@ -70,13 +70,24 @@
         <div class="admin-content">
         <div class="form-fields">
         <div class="col s12 m5">
+              <form action="#">
+                <p>
+                  <input type="checkbox" class="question-text" id="questionCheckBox" value="{{ question.sharedReactions }}"/>
+                  <label for="questionCheckBox"><span class="labelTitle">Show Add a Question?</span></label>
+                </p>
+              </form>
+          <!-- <div class="allQuestions"> -->
+
 
             <section class="questionSelector">
               <h3>Questions</h3>
             <label for="id">
-            <div class="questionSelector"><span class="labelTitle">Questions Selector: (CSS Selector)</span><p>
-              Defines sections where the questions will be placed, whether it is before or after a certain element.
-            </p></label></div><input id="autoQuestionsSelector" type="text" value="{{ question_config.autoQuestionsSelector }}">
+            <div class="questionSelector"><span class="labelTitle">Questions Selector: (CSS Selector)</span>
+              <p>Defines sections where the questions will be placed, whether it is before or after a certain element.</p>
+            </label>
+            <input id="autoQuestionsSelector" type="text" value="{{ question_config.autoQuestionsSelector }}">
+            </div>
+
 
             <div class="formRow">
                       <label for="id_summary_widget_method">
@@ -93,23 +104,22 @@
             </div>
 
             <div class="formRow">
-
-
-            <label for="id">
-            <div class=""><span class="labelTitle">Questions:</span></div>
-            {% for question in question_config.questions %}
+              <label for="id">
+                <div class=""><span class="labelTitle">Questions:</span></div>
+                  {% for question in question_config.questions %}
                 <div class="question" data-id="{{ question.id }}">
                   <p>
                     What sort of questions do you want your audience to react too? Here you can write specific questions to target those reactions.
-                  </p></label>
-                    <div class="">Question Text:</div><input type="text" class="question-text" value="{{ question.text }}">
-                    <button class="btn flat">Add Question</button>
+                  </p>
+              </label>
+                <div class="">Question Text:</div><input type="text" class="question-text" value="{{ question.text }}">
                 </div>
-                </div>
+            </div>
+
                 <div class="formRow">
                   <div class="question" data-id="{{ question.id }}">
                       <div class="">Answers:</div><input type="text" class="question-text" value="{{ question.answers }}">
-                        <button class="btn flat">Add Answer</button>
+                        <button class="btn-small">Add Question</button>
                 </div>
                 </div>
                 <div class="formRow">
@@ -117,14 +127,31 @@
                 <div class="question" data-id="{{ question.id }}">
                     <div class=""><span class="labelTitle">Shared Reactions:</span><p>
                       Would you like your users to be able to create their own reactions?
-                    </p></div><input type="text" class="question-text" value="{{ question.sharedReactions }}"></label>
+                    </p></div>
+                   <!-- <input type="text" class="question-text" value="{{ question.sharedReactions }}"> -->
+                     <form action="#">
+                      <p>
+                        <input type="checkbox" class="question-text" id="checkBox" value="{{ question.sharedReactions }}"/>
+                        <label for="checkBox">Yes</label>
+                      </p>
+
+                    </form>
+                  </label>
                 </div>
               </div>
               <label>{% endfor %}</label>
             </section>
-        </div>
-
+        <!-- </div> -->
+      </div>
                   <div class="rightColumn col s12 m5 offset-m1">
+
+                    <form action="#">
+                      <p>
+                        <input type="checkbox" class="question-text" id="catergoryCheckBox"/>
+                        <label for="catergoryCheckBox"><span class="labelTitle">Show Add a Catergory?</span></label>
+                      </p>
+                    </form>
+
                     <section class="">
                       <h3>Categories</h3>
                         <label for="id">
@@ -135,7 +162,7 @@
                       <div class="formRow">
                         <label for="id"><span class="labelTitle">Add a Category:</span>
                         <input type="text" class="addCategory" name="name" value="{{ category.categorySelector }}">
-                        <button class="btn flat">Add a category</button></label>
+                        <button class="btn-small">Add a category</button></label>
                       </div>
                       <div class="formRow">
                         <label for="categoryValue">
@@ -152,7 +179,7 @@
                           <p>
                             Add a question to a specific category
                           </p>
-                          <button class="btn flat">Add Question</button>
+                          <button class="btn-small">Add Question</button>
                       </div></label>
 
                       </div>
@@ -214,6 +241,7 @@
           }
       });
   </script>
+
 {% endblock %}
 
 <!-- //     $(function() {
