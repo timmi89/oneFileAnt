@@ -55,7 +55,7 @@
 -->
 
 {% block page_content %}
-    <section class="content" data-groupId="{{ group.id }}">
+    <section class="content" data-group-id="{{ group.id }}">
         <div class="admin-header">
             <h1>Q &amp; A</h1>
             <div class="fixed-button-container">
@@ -66,7 +66,6 @@
             <button class="btn flat">Save Changes</button>
             </div>
         </div>
-
         <div class="admin-content">
         <div class="form-fields">
         <div class="col s12 m5">
@@ -131,7 +130,7 @@
                    <!-- <input type="text" class="question-text" value="{{ question.sharedReactions }}"> -->
                      <form action="#">
                       <p>
-                        <input type="checkbox" class="question-text" id="checkBox" value="{{ question.sharedReactions }}"/>
+                        <input type="checkbox" class="question-reaction" id="checkBox" value="{{ question.sharedReactions }}"/>
                         <label for="checkBox">Yes</label>
                       </p>
 
@@ -166,10 +165,10 @@
                       </div>
                       <div class="formRow">
                         <label for="categoryValue">
-                      <div class="category" data-id="{{ question.id }}">
-                          <div class=""><span class="labelTitle">Category value:</span></div><input type="text" class="question-text" value="{{ question.text }}">
+                      <div class="category" data-id="{{ question.categories.values }}">
+                          <div class=""><span class="labelTitle">Category value:</span></div><input type="text" class="catergory-text" value="{{ question.text }}">
                       </div></label>
-
+                      <!-- <input type="text" class="question-text" value="{{ question.text }}"> -->
                       </div>
 
                       <div class="formRow">
@@ -191,11 +190,15 @@
 
 
                   </div>
+                  <!-- <div class="formRow">
+                    <h1 class="update"></h1>
+                  </div> -->
                 </div>
 
 
     </section>
 
+    <!-- </section> -->
 
 {% endblock page_content %}
 
@@ -203,60 +206,52 @@
     {% endblock %}
 
 {% block page_js %}
-<script>
-      $(function() {
-          $('.content').on('click', 'button', submitChanges);
-          function loadQuestionConfig() {
-              var question_config = {};
-              question_config.autoQuestionsSelector = $('#autoQuestionsSelector').val();
-              question_config.questions = [];
-              var questionElements = $('.question');
-              for (var i = 0; i < questionElements.length; i++) {
-                  var questionElement = $(questionElements[i]);
-                  var question = {};
-                  question.id = questionElement.data('id');
-                  question.text = questionElement.find('.question-text').val();
-                  // question.text = questionElement.find('.answer-text').val();
-                  question_config.questions.push(question);
-              }
-              return question_config;
-          }
+    <script>
+        $(function() {
 
-          function submitChanges() {
-              var questions = loadQuestionConfig();
-              console.log('Pretending to submit: ');
-              console.log(JSON.stringify(questions, null, 4));
-//                $.ajax({
-//                    url: "/api/questionConfig/"+$('.content').data('groupId')+"/",
-//                    type: "put",
-//                    // contentType: "application/json",
-//                    // dataType: "jsonp",
-//                    data: { json: JSON.stringify(questions) },
-//                    success: function(response) {
-//                    },
-//                    error: function(response) {
-//                        console.log(response);
-//                    }
-//                });
-          }
-      });
-  </script>
+            $('.content').on('click', 'button', submitChanges);
 
+            function loadQuestionConfig() {
+                var question_config = {};
+                question_config.autoQuestionsSelector = $('#autoQuestionsSelector').val();
+                question_config.questions = [];
+                var questionElements = $('.question');
+                for (var i = 0; i < questionElements.length; i++) {
+                    var questionElement = $(questionElements[i]);
+                    var question = {};
+                    question.id = questionElement.data('id');
+                    question.text = questionElement.find('.question-text').val();
+                    // question.sharedReactions = false; TODO
+                    question.sharedReactions = questionElement.find('.question-reaction').val();
+
+                    question_config.questions.push(question);
+                }
+
+                return question_config;
+            }
+
+            function submitChanges() {
+                var questions = loadQuestionConfig();
+                console.log('Pretending to submit: ');
+                console.log(JSON.stringify({json: questions}, null, 4));
+                var groupId = $('.content').data('group-id');
+                $.ajax({
+                    url: '/api/questions/' + groupId + '/',
+                    method: 'PUT',
+                    // contentType: "application/json",
+                    // dataType: "json",
+                    data: JSON.stringify(questions),
+                    success: function(response) {
+                          // document.getElementById('.update').innerHTML(thank you! Your information has been updated!)
+                        // TODO: show success
+                        console.log("Save response: " + response.data.updated);
+                    },
+                    error: function(response) {
+                        console.log(response);
+                    }
+                });
+            }
+
+        });
+    </script>
 {% endblock %}
-
-<!-- //     $(function() {
-//         $('.content').on('click', 'button', submitChanges);
-//         function loadCategoryConfig() {
-//             var Category_config = {};
-//             question_config.autoQuestionsSelector = $('#autoCategorySelector').val();
-//             category_config.category = [];
-//             var CategoryElements = $('.Category');
-//             for (var i = 0; i < categoryElements.length; i++) {
-//                 var categoryElement = $(questionElements[i]);
-//                 var category = {};
-//                 category.id = categoryElement.data('id');
-//                 category.text = categoryElement.find('.category-text').val();
-//                 category_config.category.push(category);
-//             }
-//             return category_config;
-// } -->
